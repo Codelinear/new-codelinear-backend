@@ -44,12 +44,12 @@ const sendMail = async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "developer@codelinear.com",
-      pass: "umlw qvhn nslr udrt",
+      user: "marketing@codelinear.com",
+      pass: "mdjj rmcm gqtc kuyt",
     },
   });
   const mailOptions = {
-    from: "Codelinear Developer <developer@codelinear.com>",
+    from: "Codelinear <marketing@codelinear.com>",
     to: email,
     subject: " Thank You for Contacting Codelinear!",
     text: `Dear ${username},
@@ -8408,7 +8408,7 @@ const getCaseStudyPageData22 = (req, res) => {
     res.send("Form submitted successfully");
   });
 };
-const getCaseStudyPageData23 = (req, res) => {
+const   getCaseStudyPageData23 = (req, res) => {
   connection.getConnection((err) => {
     if (err) {
       console.log(err);
