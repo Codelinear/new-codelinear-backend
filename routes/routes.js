@@ -363,7 +363,10 @@ const storage = multer.diskStorage({
     );
   },
 });
-const upload = multer({ storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+});
 const connection = mysql.createPool({
   host: "217.21.87.205",
   user: "u947451844_saif08",
@@ -372,6 +375,10 @@ const connection = mysql.createPool({
 });
 const router = express.Router();
 router.post("/images", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    res.status(400).send("No file uploaded");
+    return;
+  }
   const { filename } = req.file;
   const { id } = req.body;
   const sql = "UPDATE images SET filename = ? WHERE id = ?";
