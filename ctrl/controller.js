@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const { response } = require("express");
 const multer = require("multer");
 const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 60 * 60 });
+const cache = new NodeCache({ stdTTL: 60 });
 
 const pool = mysql.createPool({
   host: "217.21.87.205",
@@ -51,11 +51,6 @@ const fetchDataByTableName = (tableName) => (req, res) => {
   });
 };
 
-const invalidateCacheForTable = (tableName) => {
-  const cacheKey = `${tableName}_data`;
-  cache.del(cacheKey);
-};
-
 const insertDataIntoTable = (tableName) => (req, res) => {
   const formData = req.body;
   const sql = `INSERT INTO ${tableName} SET ?`;
@@ -66,7 +61,6 @@ const insertDataIntoTable = (tableName) => (req, res) => {
     } else {
       console.log("Form data inserted:", result);
       res.send("Form submitted successfully");
-      invalidateCacheForTable(tableName);
     }
   });
 };
@@ -81,7 +75,6 @@ const deleteDataByColumnName = (tableName, columnName) => (req, res) => {
     } else {
       console.log("Data deleted successfully:", result);
       res.send("Data deleted successfully");
-      invalidateCacheForTable(tableName);
     }
   });
 };
@@ -99,7 +92,6 @@ const updateCaseStudyData = (id) => (req, res) => {
       } else {
         console.log("Case study data updated successfully:", result);
         res.send("Case study data updated successfully");
-        invalidateCacheForTable('maincasestudy');
       }
     }
   );
