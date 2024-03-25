@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const { response } = require("express");
 const multer = require("multer");
 const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 60 });
+const cache = new NodeCache({ stdTTL: 0 });
 
 const pool = mysql.createPool({
   host: "217.21.87.205",
