@@ -5,7 +5,7 @@ const mysql = require("mysql");
 
 const {
   sendMailContact,
-  sendMail,
+  displayImages,
   getMailData,
   displayMailData,
   getHomeHeroHeaderData,
@@ -24,27 +24,17 @@ const {
   displayHomeVisionHeaderData,
   getHomeDigitalTransformationData,
   displayHomeDigitalTransformationData,
-  getHomeTechnologyConsultingData,
-  displayHomeTechnlogyConsultingData,
   getHomeProductEngineeringData,
   displayHomeProductEngineeringData,
+  getHomeTechnologyConsultingData,
+  displayHomeTechnlogyConsultingData,
   getHomeAboutData,
   displayHomeAboutData,
   getHomeServiceData,
-  getHomeService1Data,
-  getHomeService2Data,
-  getHomeService3Data,
-  getHomeService4Data,
-  getHomeService5Data,
-  getHomeService6Data,
-  getHomeService7Data,
-  getHomeService8Data,
-  getHomeService9Data,
-  getHomeService10Data,
-  getHomeService11Data,
-  getHomeService12Data,
   displayHomeServiceData,
+  getHomeService1Data,
   displayHomeService1Data,
+  getHomeService2Data,
   displayHomeService2Data,
   displayHomeService3Data,
   displayHomeService4Data,
@@ -56,6 +46,16 @@ const {
   displayHomeService10Data,
   displayHomeService11Data,
   displayHomeService12Data,
+  getHomeService3Data,
+  getHomeService4Data,
+  getHomeService5Data,
+  getHomeService6Data,
+  getHomeService7Data,
+  getHomeService8Data,
+  getHomeService9Data,
+  getHomeService10Data,
+  getHomeService11Data,
+  getHomeService12Data,
   getHomeCaseStudy1Data,
   getHomeCaseStudy2Data,
   getHomeCaseStudy3Data,
@@ -108,6 +108,24 @@ const {
   getHomeBlogData15,
   getHomeBlogData16,
   getHomeBlogData17,
+  getBlogPageData1,
+  getBlogPageData2,
+  getBlogPageData3,
+  getBlogPageData4,
+  getBlogPageData5,
+  getBlogPageData6,
+  getBlogPageData7,
+  getBlogPageData8,
+  getBlogPageData9,
+  getBlogPageData10,
+  getBlogPageData11,
+  getBlogPageData12,
+  getBlogPageData13,
+  getBlogPageData14,
+  getBlogPageData15,
+  getBlogPageData16,
+  getBlogPageData18,
+  getHomeBlogData18,
   getBlogHeaderData,
   displayHomeBlogData,
   displayHomeBlogData1,
@@ -127,12 +145,30 @@ const {
   displayHomeBlogData15,
   displayHomeBlogData16,
   displayHomeBlogData17,
+  displayHomeBlogData18,
+  displayBlogPageData1,
+  displayBlogPageData2,
+  displayBlogPageData3,
+  displayBlogPageData4,
+  displayBlogPageData5,
+  displayBlogPageData6,
+  displayBlogPageData7,
+  displayBlogPageData8,
+  displayBlogPageData9,
+  displayBlogPageData10,
+  displayBlogPageData11,
+  displayBlogPageData12,
+  displayBlogPageData13,
+  displayBlogPageData14,
+  displayBlogPageData15,
+  displayBlogPageData16,
+  displayBlogPageData18,
   displayBlogHeaderData,
-  getHomeAddressData,
   getHomeCompanyData,
-  getHomeContactData,
-  displayHomeAddressData,
   displayHomeCompanyData,
+  getHomeAddressData,
+  displayHomeAddressData,
+  getHomeContactData,
   displayHomeContactData,
   getServiceHeaderData,
   displayServiceHeaderData,
@@ -249,16 +285,28 @@ const {
   getCaseStudyData34,
   displayCaseStudyHeaderData,
   getCareerHeaderData,
-  getCareerPos1Data,
   displayCareerHeaderData,
+  getCareerPos1Data,
   displayCareerpos1Data,
   getContactData,
   displayContactData,
+  sendMail,
   getAdminData,
   deleteAdminData,
   deletePositionData,
   displayAdminData,
-  displayImages,
+  displayServicePage1Data,
+  displayServicePage2Data,
+  displayServicePage3Data,
+  displayServicePage4Data,
+  displayServicePage5Data,
+  displayServicePage6Data,
+  displayServicePage7Data,
+  displayServicePage8Data,
+  displayServicePage9Data,
+  displayServicePage10Data,
+  displayServicePage11Data,
+  displayServicePage12Data,
   displayCaseStudyPage1,
   displayCaseStudyPage2,
   displayCaseStudyPage3,
@@ -293,18 +341,6 @@ const {
   displayCaseStudyPage32,
   displayCaseStudyPage33,
   displayCaseStudyPage34,
-  displayServicePage1Data,
-  displayServicePage2Data,
-  displayServicePage3Data,
-  displayServicePage4Data,
-  displayServicePage5Data,
-  displayServicePage6Data,
-  displayServicePage7Data,
-  displayServicePage8Data,
-  displayServicePage9Data,
-  displayServicePage10Data,
-  displayServicePage11Data,
-  displayServicePage12Data,
   getServicepage1,
   getServicepage2,
   getServicepage3,
@@ -460,6 +496,24 @@ router.post("/getHomeBlog14Data", getHomeBlogData14);
 router.post("/getHomeBlog15Data", getHomeBlogData15);
 router.post("/getHomeBlog16Data", getHomeBlogData16);
 router.post("/getHomeBlog17Data", getHomeBlogData17);
+router.post("/getHomeBlog18Data", getHomeBlogData18);
+router.post("/getBlogPage1Data", getBlogPageData1);
+router.post("/getBlogPage2Data", getBlogPageData2);
+router.post("/getBlogPage3Data", getBlogPageData3);
+router.post("/getBlogPage4Data", getBlogPageData4);
+router.post("/getBlogPage5Data", getBlogPageData5);
+router.post("/getBlogPage6Data", getBlogPageData6);
+router.post("/getBlogPage7Data", getBlogPageData7);
+router.post("/getBlogPage8Data", getBlogPageData8);
+router.post("/getBlogPage9Data", getBlogPageData9);
+router.post("/getBlogPage10Data", getBlogPageData10);
+router.post("/getBlogPage11Data", getBlogPageData11);
+router.post("/getBlogPage12Data", getBlogPageData12);
+router.post("/getBlogPage13Data", getBlogPageData13);
+router.post("/getBlogPage14Data", getBlogPageData14);
+router.post("/getBlogPage15Data", getBlogPageData15);
+router.post("/getBlogPage16Data", getBlogPageData16);
+router.post("/getBlogPage18Data", getBlogPageData18);
 router.post("/getBlogHeaderData", getBlogHeaderData);
 router.post("/getHomeCompanyData", getHomeCompanyData);
 router.post("/getHomeAddressData", getHomeAddressData);
@@ -661,6 +715,24 @@ router.get("/displayHomeBlog14Data", displayHomeBlogData14);
 router.get("/displayHomeBlog15Data", displayHomeBlogData15);
 router.get("/displayHomeBlog16Data", displayHomeBlogData16);
 router.get("/displayHomeBlog17Data", displayHomeBlogData17);
+router.get("/displayHomeBlog18Data", displayHomeBlogData18);
+router.get("/displayBlogPage1Data", displayBlogPageData1);
+router.get("/displayBlogPage2Data", displayBlogPageData2);
+router.get("/displayBlogPage3Data", displayBlogPageData3);
+router.get("/displayBlogPage4Data", displayBlogPageData4);
+router.get("/displayBlogPage5Data", displayBlogPageData5);
+router.get("/displayBlogPage6Data", displayBlogPageData6);
+router.get("/displayBlogPage7Data", displayBlogPageData7);
+router.get("/displayBlogPage8Data", displayBlogPageData8);
+router.get("/displayBlogPage9Data", displayBlogPageData9);
+router.get("/displayBlogPage10Data", displayBlogPageData10);
+router.get("/displayBlogPage11Data", displayBlogPageData11);
+router.get("/displayBlogPage12Data", displayBlogPageData12);
+router.get("/displayBlogPage13Data", displayBlogPageData13);
+router.get("/displayBlogPage14Data", displayBlogPageData14);
+router.get("/displayBlogPage15Data", displayBlogPageData15);
+router.get("/displayBlogPage16Data", displayBlogPageData16);
+router.get("/displayBlogPage18Data", displayBlogPageData18);
 router.get("/displayBlogHeaderData", displayBlogHeaderData);
 router.get("/displayHomeCompanyData", displayHomeCompanyData);
 router.get("/displayHomeAddressData", displayHomeAddressData);
