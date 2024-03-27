@@ -284,6 +284,42 @@ const getHomeBlogData15 = insertDataIntoTable("blog15");
 const displayHomeBlogData15 = fetchDataByTableName("blog15");
 const getHomeBlogData16 = insertDataIntoTable("blog16");
 const displayHomeBlogData16 = fetchDataByTableName("blog16");
+const getHomeBlogData18 = insertDataIntoTable("blog17");
+const displayHomeBlogData18 = fetchDataByTableName("blog17");
+const getBlogPageData1 = insertDataIntoTable("seo_blog");
+const displayBlogPageData1 = fetchDataByTableName("seo_blog");
+const getBlogPageData2 = insertDataIntoTable("nocode_blog");
+const displayBlogPageData2 = fetchDataByTableName("nocode_blog");
+const getBlogPageData3 = insertDataIntoTable("shopify_blog");
+const displayBlogPageData3 = fetchDataByTableName("shopify_blog");
+const getBlogPageData4 = insertDataIntoTable("design_blog");
+const displayBlogPageData4 = fetchDataByTableName("design_blog");
+const getBlogPageData5 = insertDataIntoTable("gestalt_blog");
+const displayBlogPageData5 = fetchDataByTableName("gestalt_blog");
+const getBlogPageData6 = insertDataIntoTable("story_blog");
+const displayBlogPageData6 = fetchDataByTableName("story_blog");
+const getBlogPageData7 = insertDataIntoTable("mvp_blog");
+const displayBlogPageData7 = fetchDataByTableName("mvp_blog");
+const getBlogPageData8 = insertDataIntoTable("disrupt_blog");
+const displayBlogPageData8 = fetchDataByTableName("disrupt_blog");
+const getBlogPageData9 = insertDataIntoTable("ux_blog");
+const displayBlogPageData9 = fetchDataByTableName("ux_blog");
+const getBlogPageData10 = insertDataIntoTable("bing_blog");
+const displayBlogPageData10 = fetchDataByTableName("bing_blog");
+const getBlogPageData11 = insertDataIntoTable("customer_blog");
+const displayBlogPageData11 = fetchDataByTableName("customer_blog");
+const getBlogPageData12 = insertDataIntoTable("react_blog");
+const displayBlogPageData12 = fetchDataByTableName("react_blog");
+const getBlogPageData13 = insertDataIntoTable("empathy_blog");
+const displayBlogPageData13 = fetchDataByTableName("empathy_blog");
+const getBlogPageData14 = insertDataIntoTable("ai_blog");
+const displayBlogPageData14 = fetchDataByTableName("ai_blog");
+const getBlogPageData15 = insertDataIntoTable("discover_blog");
+const displayBlogPageData15 = fetchDataByTableName("discover_blog");
+const getBlogPageData16 = insertDataIntoTable("digital_blog");
+const displayBlogPageData16 = fetchDataByTableName("digital_blog");
+const getBlogPageData18 = insertDataIntoTable("motion_blog");
+const displayBlogPageData18 = fetchDataByTableName("motion_blog");
 const getHomeBlogData17 = insertDataIntoTable("featuredblog");
 const displayHomeBlogData17 = fetchDataByTableName("featuredblog");
 const getBlogHeaderData = insertDataIntoTable("blogmainpage");
@@ -612,6 +648,24 @@ module.exports = {
   getHomeBlogData15,
   getHomeBlogData16,
   getHomeBlogData17,
+  getBlogPageData1,
+  getBlogPageData2,
+  getBlogPageData3,
+  getBlogPageData4,
+  getBlogPageData5,
+  getBlogPageData6,
+  getBlogPageData7,
+  getBlogPageData8,
+  getBlogPageData9,
+  getBlogPageData10,
+  getBlogPageData11,
+  getBlogPageData12,
+  getBlogPageData13,
+  getBlogPageData14,
+  getBlogPageData15,
+  getBlogPageData16,
+  getBlogPageData18,
+  getHomeBlogData18,
   getBlogHeaderData,
   displayHomeBlogData,
   displayHomeBlogData1,
@@ -631,6 +685,24 @@ module.exports = {
   displayHomeBlogData15,
   displayHomeBlogData16,
   displayHomeBlogData17,
+  displayHomeBlogData18,
+  displayBlogPageData1,
+  displayBlogPageData2,
+  displayBlogPageData3,
+  displayBlogPageData4,
+  displayBlogPageData5,
+  displayBlogPageData6,
+  displayBlogPageData7,
+  displayBlogPageData8,
+  displayBlogPageData9,
+  displayBlogPageData10,
+  displayBlogPageData11,
+  displayBlogPageData12,
+  displayBlogPageData13,
+  displayBlogPageData14,
+  displayBlogPageData15,
+  displayBlogPageData16,
+  displayBlogPageData18,
   displayBlogHeaderData,
   getHomeCompanyData,
   displayHomeCompanyData,
