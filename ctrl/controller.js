@@ -3,8 +3,8 @@ var validator = require("node-email-validation");
 const mysql = require("mysql");
 const { response } = require("express");
 const multer = require("multer");
-const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 0 });
+// const NodeCache = require("node-cache");
+// const cache = new NodeCache({ stdTTL: 0 });
 
 const pool = mysql.createPool({
   host: "217.21.87.205",
@@ -33,12 +33,12 @@ const executeQuery = (sql, params, callback) => {
 };
 
 const fetchDataByTableName = (tableName) => (req, res) => {
-  const cacheKey = `${tableName}_data`;
-  const cachedData = cache.get(cacheKey);
-  if (cachedData) {
-    console.log("Data retrieved from cache");
-    return res.send(cachedData);
-  }
+  // const cacheKey = `${tableName}_data`;
+  // const cachedData = cache.get(cacheKey);
+  // if (cachedData) {
+  //   console.log("Data retrieved from cache");
+  //   return res.send(cachedData);
+  // }
   const sql = `SELECT * FROM ${tableName}`;
   executeQuery(sql, null, (err, results) => {
     if (err) {
@@ -46,7 +46,7 @@ const fetchDataByTableName = (tableName) => (req, res) => {
       res.status(500).send("Error retrieving data from database");
       return;
     }
-    cache.set(cacheKey, results);
+    // cache.set(cacheKey, results);
     res.send(results);
   });
 };
