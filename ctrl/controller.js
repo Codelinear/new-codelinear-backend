@@ -9,25 +9,25 @@ const pool = mysql.createPool({
   user: "u947451844_saif08",
   password: "u]1ro&X$1R",
   database: "u947451844_pages",
+  connectionLimit: 20,
 });
 
 const executeQuery = (sql, params) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("Error connecting to database:", err);
-        reject(err);
-      } else {
-        connection.query(sql, params, (err, results) => {
-          connection.release();
-          if (err) {
-            console.error("Error executing query:", err);
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        });
+        console.error("Error acquiring connection from pool:", err);
+        return reject(err);
       }
+
+      connection.query(sql, params, (err, results) => {
+        connection.release();
+        if (err) {
+          console.error("Error executing query:", err);
+          return reject(err);
+        }
+        resolve(results);
+      });
     });
   });
 };
@@ -38,7 +38,7 @@ const fetchDataByTableName = (tableName) => async (req, res) => {
     const results = await executeQuery(sql, null);
     res.send(results);
   } catch (err) {
-    console.log(err);
+    console.error("Error retrieving data from database:", err);
     res.status(500).send("Error retrieving data from database");
   }
 };
@@ -71,6 +71,7 @@ const deleteDataByColumnName = (tableName, columnName) => async (req, res) => {
     res.status(500).send(`Error deleting data from ${tableName}`);
   }
 };
+
 const updateCaseStudyData = (id) => async (req, res) => {
   const { company, companytitle, companybody, companyindustry } = req.body;
 
@@ -91,7 +92,6 @@ const updateCaseStudyData = (id) => async (req, res) => {
     res.status(500).send("Error updating case study data");
   }
 };
-
 const sendMailContact = (req, res) => {
   const { username, lastname, email, message } = req.body;
   if (validator.is_email_valid(email)) {
