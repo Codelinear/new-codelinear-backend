@@ -13,7 +13,7 @@ if (cluster.isMaster) {
         cluster.fork();
     });
 } else {
-    process.env.UV_THREADPOOL_SIZE = 16;
+    process.env.UV_THREADPOOL_SIZE = 32;
     const express = require('express');
     const cors = require('cors');
     const { router } = require('./routes/routes');
