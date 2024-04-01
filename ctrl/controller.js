@@ -9,24 +9,17 @@ const pool = mysql.createPool({
   user: "u947451844_saif08",
   password: "u]1ro&X$1R",
   database: "u947451844_pages",
+  connectionLimit: 400,
 });
 
-const executeQuery = (sql, params) => {
+const executeQuery = (connection, sql, params) => {
   return new Promise((resolve, reject) => {
-    pool.getConnection((err, connection) => {
+    connection.query(sql, params, (err, results) => {
       if (err) {
-        console.error("Error connecting to database:", err);
+        console.error("Error executing query:", err);
         reject(err);
       } else {
-        connection.query(sql, params, (err, results) => {
-          connection.release();
-          if (err) {
-            console.error("Error executing query:", err);
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        });
+        resolve(results);
       }
     });
   });
@@ -43,13 +36,35 @@ const fetchDataByTableName = (tableName) => async (req, res) => {
   }
 };
 
+const executeQueryWithConnection = (sql, params) => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.error("Error connecting to database:", err);
+        reject(err);
+      } else {
+        executeQuery(connection, sql, params)
+          .then((results) => {
+            resolve(results);
+          })
+          .catch((err) => {
+            reject(err);
+          })
+          .finally(() => {
+            connection.release();
+          });
+      }
+    });
+  });
+};
+
 const insertDataIntoTable = (tableName) => async (req, res) => {
   const formData = req.body;
   const sql = `INSERT INTO ${tableName} SET ?`;
 
   try {
-    const result = await executeQuery(sql, formData);
-    console.log("Form data inserted:", result);
+    const results = await executeQueryWithConnection(sql, null);
+    console.log("Form data inserted:", results);
     res.send("Form submitted successfully");
   } catch (err) {
     console.error("Error inserting data:", err);
@@ -63,8 +78,8 @@ const deleteDataByColumnName = (tableName, columnName) => async (req, res) => {
   const sql = `DELETE FROM ${tableName} WHERE ${columnName} = ?`;
 
   try {
-    const result = await executeQuery(sql, [value]);
-    console.log("Data deleted successfully:", result);
+    const results = await executeQueryWithConnection(sql, null);
+    console.log("Data deleted successfully:", results);
     res.send("Data deleted successfully");
   } catch (err) {
     console.error(`Error deleting data from ${tableName}:`, err);
@@ -77,7 +92,7 @@ const updateCaseStudyData = (id) => async (req, res) => {
   const sql = `UPDATE maincasestudy SET company = ?, companytitle = ?, companybody = ?, companyindustry = ? WHERE id = ?`;
 
   try {
-    const result = await executeQuery(sql, [
+    const result = await executeQueryWithConnection(sql, [
       company,
       companytitle,
       companybody,
