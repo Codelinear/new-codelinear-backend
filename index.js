@@ -1,60 +1,66 @@
-const cluster = require('cluster');
-const numCPUs = require('os').cpus().length;
+process.env.UV_THREADPOOL_SIZE = 32;
+const express = require("express");
+const session = require("express-session");
+const cors = require("cors");
+const { router } = require("./routes/routes");
+const bodyParser = require("body-parser");
+const path = require("path");
+const mysql = require("mysql");
+const app = express();
 
-if (cluster.isMaster) {
-    console.log(`Master ${process.pid} is running`);
+const sessionMiddleware = session({
+  secret: "rewvtgreytbryjjgbn6yr",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true },
+});
 
-    for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
+app.use(sessionMiddleware);
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use(router);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-    cluster.on('exit', (worker, code, signal) => {
-        console.log(`Worker ${worker.process.pid} died`);
-        cluster.fork();
-    });
-} else {
-    process.env.UV_THREADPOOL_SIZE = 32;
-    const express = require('express');
-    const session = require('express-session');
-    const cors = require('cors');
-    const { router } = require('./routes/routes');
-    const bodyParser = require('body-parser');
-    const path = require('path');
+const port = process.env.PORT || 4500;
+const server = app.listen(port, () => {
+  console.log(`App running on port ${port}...`);
+});
 
-    const app = express();
+server.on("error", (err) => {
+  console.error("Server error:", err.message);
+});
 
-    const sessionMiddleware = session({
-        secret: 'rewvtgreytbryjjgbn6yr',
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: false } 
-    });
+process.on("exit", () => {
+  console.log("Exiting...");
+  server.close(() => {
+    console.log("Server closed");
+  });
+});
 
-    app.use(sessionMiddleware);
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err.message);
+  process.exit(1);
+});
 
-    app.use(express.json());
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(cors());
-    app.use(router);
-    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const pool = mysql.createPool({
+  host: "217.21.87.205",
+  user: "u947451844_saif08",
+  password: "u]1ro&X$1R",
+  database: "u947451844_pages",
+  connectionLimit: 20,
+});
 
-    const port = process.env.PORT || 4500;
-    const server = app.listen(port, () => {
-        console.log(`Worker ${process.pid} is running`);
-        console.log(`App running on port ${port}...`);
-    });
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error("Database connection error:", err.message);
+    process.exit(1);
+  }
+  console.log("Database Connected");
+  connection.release();
+});
 
-    process.on('exit', () => {
-        server.close(() => {
-            console.log(`Worker ${process.pid} closed`);
-        });
-    });
-
-    cluster.on('disconnect', (worker) => {
-        console.log(`Worker ${worker.process.pid} disconnected`);
-        sessionMiddleware.destroy(() => {
-            console.log(`Session destroyed for Worker ${worker.process.pid}`);
-        });
-    });
-}
+module.exports = {
+  pool,
+};
