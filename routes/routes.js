@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const mysql = require("mysql");
-const {pool} = require('../index')
+const {pool} = require('../pool/pool')
 
 const {
   sendMailContact,
