@@ -11,7 +11,7 @@ const sessionMiddleware = session({
   secret: "rewvtgreytbryjjgbn6yr",
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true },
+  cookie: { secure: false },
 });
 
 app.use(sessionMiddleware);
