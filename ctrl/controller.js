@@ -3,40 +3,19 @@ var validator = require("node-email-validation");
 const mysql = require("mysql");
 const { response } = require("express");
 const multer = require("multer");
-
-const pool = mysql.createPool({
-  host: "217.21.87.205",
-  user: "u947451844_saif08",
-  password: "u]1ro&X$1R",
-  database: "u947451844_pages",
-  connectionLimit: 20,
-});
-
-const executeQuery = (sql, params) => {
-  return new Promise((resolve, reject) => {
-    pool.getConnection((err, connection) => {
-      if (err) {
-        console.error("Error acquiring connection from pool:", err);
-        return reject(err);
-      }
-
-      connection.query(sql, params, (err, results) => {
-        connection.release();
-        if (err) {
-          console.error("Error executing query:", err);
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
-  });
-};
+const { pool } = require('../index'); // Importing pool from index file
 
 const fetchDataByTableName = (tableName) => async (req, res) => {
   try {
     const sql = `SELECT * FROM ${tableName}`;
-    const results = await executeQuery(sql, null);
-    res.send(results);
+    pool.query(sql, (error, results) => {
+      if (error) {
+        console.error("Error retrieving data from database:", error);
+        res.status(500).send("Error retrieving data from database");
+      } else {
+        res.send(results);
+      }
+    });
   } catch (err) {
     console.error("Error retrieving data from database:", err);
     res.status(500).send("Error retrieving data from database");
@@ -48,9 +27,15 @@ const insertDataIntoTable = (tableName) => async (req, res) => {
   const sql = `INSERT INTO ${tableName} SET ?`;
 
   try {
-    const result = await executeQuery(sql, formData);
-    console.log("Form data inserted:", result);
-    res.send("Form submitted successfully");
+    pool.query(sql, formData, (error, result) => {
+      if (error) {
+        console.error("Error inserting data:", error);
+        res.status(500).send("Error inserting data into database");
+      } else {
+        console.log("Form data inserted:", result);
+        res.send("Form submitted successfully");
+      }
+    });
   } catch (err) {
     console.error("Error inserting data:", err);
     res.status(500).send("Error inserting data into database");
@@ -63,9 +48,15 @@ const deleteDataByColumnName = (tableName, columnName) => async (req, res) => {
   const sql = `DELETE FROM ${tableName} WHERE ${columnName} = ?`;
 
   try {
-    const result = await executeQuery(sql, [value]);
-    console.log("Data deleted successfully:", result);
-    res.send("Data deleted successfully");
+    pool.query(sql, [value], (error, result) => {
+      if (error) {
+        console.error(`Error deleting data from ${tableName}:`, error);
+        res.status(500).send(`Error deleting data from ${tableName}`);
+      } else {
+        console.log("Data deleted successfully:", result);
+        res.send("Data deleted successfully");
+      }
+    });
   } catch (err) {
     console.error(`Error deleting data from ${tableName}:`, err);
     res.status(500).send(`Error deleting data from ${tableName}`);
@@ -78,20 +69,21 @@ const updateCaseStudyData = (id) => async (req, res) => {
   const sql = `UPDATE maincasestudy SET company = ?, companytitle = ?, companybody = ?, companyindustry = ? WHERE id = ?`;
 
   try {
-    const result = await executeQuery(sql, [
-      company,
-      companytitle,
-      companybody,
-      companyindustry,
-      id,
-    ]);
-    console.log("Case study data updated successfully:", result);
-    res.send("Case study data updated successfully");
+    pool.query(sql, [company, companytitle, companybody, companyindustry, id], (error, result) => {
+      if (error) {
+        console.error("Error updating case study data:", error);
+        res.status(500).send("Error updating case study data");
+      } else {
+        console.log("Case study data updated successfully:", result);
+        res.send("Case study data updated successfully");
+      }
+    });
   } catch (err) {
     console.error("Error updating case study data:", err);
     res.status(500).send("Error updating case study data");
   }
 };
+
 const sendMailContact = (req, res) => {
   const { username, lastname, email, message } = req.body;
   if (validator.is_email_valid(email)) {
@@ -121,6 +113,7 @@ const sendMailContact = (req, res) => {
     res.status(500).send("Error sending email");
   }
 };
+
 const sendMail = async (req, res) => {
   const { email, username } = req.body;
   try {
@@ -158,6 +151,7 @@ Codelinear`,
     res.status(500).send("Error sending email");
   }
 };
+
 module.exports = {
   sendMailContact,
   sendMail,
