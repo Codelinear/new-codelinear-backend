@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const mysql = require("mysql");
+const {pool} = require('../index')
 
 const {
   sendMailContact,
@@ -23,12 +24,6 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-const connection = mysql.createPool({
-  host: "217.21.87.205",
-  user: "u947451844_saif08",
-  password: "u]1ro&X$1R",
-  database: "u947451844_pages",
-});
 const router = express.Router();
 router.post("/images", upload.single("image"), (req, res) => {
   if (!req.file) {
@@ -38,7 +33,7 @@ router.post("/images", upload.single("image"), (req, res) => {
   const { filename } = req.file;
   const { id } = req.body;
   const sql = "UPDATE images SET filename = ? WHERE id = ?";
-  connection.query(sql, [filename, id], (err, result) => {
+  pool.query(sql, [filename, id], (err, result) => {
     if (err) {
       console.error("Error uploading image: ", err);
       res.status(500).send("Error uploading image");
