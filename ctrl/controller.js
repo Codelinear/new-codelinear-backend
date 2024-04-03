@@ -1,9 +1,6 @@
 const nodemailer = require("nodemailer");
 var validator = require("node-email-validation");
-const mysql = require("mysql");
-const { response } = require("express");
-const multer = require("multer");
-const { pool } = require('../index'); // Importing pool from index file
+const { pool } = require('../pool/pool');
 
 const fetchDataByTableName = (tableName) => async (req, res) => {
   try {
