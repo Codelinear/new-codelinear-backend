@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 var validator = require("node-email-validation");
-const { pool } = require('../pool/pool');
+const pool  = require('../pool/pool');
 
 const fetchDataByTableName = (tableName) => async (req, res) => {
   try {
