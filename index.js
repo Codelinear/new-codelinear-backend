@@ -3,8 +3,8 @@ const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
 const { router } = require("./routes/routes");
-const bodyParser = require("body-parser");
 const path = require("path");
+
 const app = express();
 
 const sessionMiddleware = session({
@@ -16,8 +16,7 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(router);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
