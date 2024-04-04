@@ -1,15 +1,25 @@
 const nodemailer = require("nodemailer");
 var validator = require("node-email-validation");
-const pool  = require('../pool/pool');
+const pool = require("../pool/pool");
+const NodeCache = require("node-cache");
+const cache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
 
 const fetchDataByTableName = (tableName) => async (req, res) => {
   try {
+    const cachedData = cache.get(tableName);
+    if (cachedData) {
+      console.log(`Retrieved ${tableName} data from cache`);
+      res.send(cachedData);
+      return;
+    }
+
     const sql = `SELECT * FROM ${tableName}`;
     pool.query(sql, (error, results) => {
       if (error) {
         console.error("Error retrieving data from database:", error);
         res.status(500).send("Error retrieving data from database");
       } else {
+        cache.set(tableName, results);
         res.send(results);
       }
     });
@@ -20,6 +30,7 @@ const fetchDataByTableName = (tableName) => async (req, res) => {
 };
 
 const insertDataIntoTable = (tableName) => async (req, res) => {
+  cache.del(tableName);
   const formData = req.body;
   const sql = `INSERT INTO ${tableName} SET ?`;
 
@@ -40,8 +51,8 @@ const insertDataIntoTable = (tableName) => async (req, res) => {
 };
 
 const deleteDataByColumnName = (tableName, columnName) => async (req, res) => {
+  cache.del(tableName);
   const { value } = req.body;
-
   const sql = `DELETE FROM ${tableName} WHERE ${columnName} = ?`;
 
   try {
@@ -61,20 +72,24 @@ const deleteDataByColumnName = (tableName, columnName) => async (req, res) => {
 };
 
 const updateCaseStudyData = (id) => async (req, res) => {
+  cache.del("maincasestudy");
   const { company, companytitle, companybody, companyindustry } = req.body;
-
   const sql = `UPDATE maincasestudy SET company = ?, companytitle = ?, companybody = ?, companyindustry = ? WHERE id = ?`;
 
   try {
-    pool.query(sql, [company, companytitle, companybody, companyindustry, id], (error, result) => {
-      if (error) {
-        console.error("Error updating case study data:", error);
-        res.status(500).send("Error updating case study data");
-      } else {
-        console.log("Case study data updated successfully:", result);
-        res.send("Case study data updated successfully");
+    pool.query(
+      sql,
+      [company, companytitle, companybody, companyindustry, id],
+      (error, result) => {
+        if (error) {
+          console.error("Error updating case study data:", error);
+          res.status(500).send("Error updating case study data");
+        } else {
+          console.log("Case study data updated successfully:", result);
+          res.send("Case study data updated successfully");
+        }
       }
-    });
+    );
   } catch (err) {
     console.error("Error updating case study data:", err);
     res.status(500).send("Error updating case study data");
