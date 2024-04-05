@@ -1,8 +1,45 @@
 const nodemailer = require("nodemailer");
 var validator = require("node-email-validation");
+const multer = require("multer");
+const path = require("path");
 const pool = require("../pool/pool");
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 86400, checkperiod: 60 });
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+const upload = multer({ storage });
+
+const uploadImage = (req, res) => {
+  cache.del("images");
+  if (!req.file) {
+    res.status(400).send("No file uploaded");
+    return;
+  }
+  const { filename } = req.file;
+  const { id } = req.body;
+  const sql = "UPDATE images SET filename = ? WHERE id = ?";
+  pool.query(sql, [filename, id], (err, result) => {
+    if (err) {
+      console.error("Error uploading image: ", err);
+      res.status(500).send("Error uploading image");
+      return;
+    }
+    console.log("Image uploaded successfully");
+    res.status(200).send("Image uploaded successfully");
+  });
+};
+
 
 const fetchDataByTableName = (tableName) => async (req, res) => {
   try {
@@ -171,4 +208,6 @@ module.exports = {
   updateCaseStudyData,
   deleteDataByColumnName,
   insertDataIntoTable,
+  upload,
+  uploadImage,
 };
