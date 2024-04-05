@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 var validator = require("node-email-validation");
 const pool = require("../pool/pool");
 const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 24 * 60 * 60, checkperiod: 60 });
+const cache = new NodeCache({ stdTTL: 86400, checkperiod: 60 });
 
 const fetchDataByTableName = (tableName) => async (req, res) => {
   try {
