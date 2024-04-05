@@ -3,6 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const mysql = require("mysql");
 const pool = require("../pool/pool");
+const { cache } = require("../ctrl/controller"); 
 
 const {
   sendMailContact,
@@ -39,6 +40,7 @@ router.post("/images", upload.single("image"), (req, res) => {
       res.status(500).send("Error uploading image");
       return;
     }
+    cache.flushAll();
     console.log("Image uploaded successfully");
     res.status(200).send("Image uploaded successfully");
   });
