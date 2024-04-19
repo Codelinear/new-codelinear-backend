@@ -1,12 +1,11 @@
-process.env.UV_THREADPOOL_SIZE = 32;
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
+const compression = require("compression");
 const { router } = require("./routes/routes");
 const path = require("path");
 
 const app = express();
-
 const sessionMiddleware = session({
   secret: "rewvtgreytbryjjgbn6yr",
   resave: false,
@@ -18,6 +17,7 @@ app.use(sessionMiddleware);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(compression());
 app.use(router);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
