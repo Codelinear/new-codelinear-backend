@@ -6,7 +6,6 @@ const pool = require("../pool/pool");
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 86400, checkperiod: 60 });
 
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -39,7 +38,6 @@ const uploadImage = (req, res) => {
     res.status(200).send("Image uploaded successfully");
   });
 };
-
 
 const fetchDataByTableName = (tableName) => async (req, res) => {
   try {
