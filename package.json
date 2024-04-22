@@ -25,6 +25,7 @@
     "node-email-validation": "^1.0.4",
     "nodemailer": "^6.9.9",
     "nodemon": "^3.0.3",
-    "package.json": "^2.0.1"
+    "package.json": "^2.0.1",
+    "redis": "^4.6.13"
   }
 }
