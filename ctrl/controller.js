@@ -3,8 +3,10 @@ var validator = require("node-email-validation");
 const multer = require("multer");
 const path = require("path");
 const pool = require("../pool/pool");
-const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 86400, checkperiod: 60 });
+const redis = require("redis");
+const client = redis.createClient();
+const { promisify } = require("util");
+const getAsync = promisify(client.get).bind(client);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -20,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const uploadImage = (req, res) => {
-  cache.del("images");
+  client.del("images"); // Clear cache for "images" key
   if (!req.file) {
     res.status(400).send("No file uploaded");
     return;
@@ -41,10 +43,10 @@ const uploadImage = (req, res) => {
 
 const fetchDataByTableName = (tableName) => async (req, res) => {
   try {
-    const cachedData = cache.get(tableName);
+    const cachedData = await getAsync(tableName);
     if (cachedData) {
       console.log(`Retrieved ${tableName} data from cache`);
-      res.send(cachedData);
+      res.send(JSON.parse(cachedData));
       return;
     }
 
@@ -54,7 +56,7 @@ const fetchDataByTableName = (tableName) => async (req, res) => {
         console.error("Error retrieving data from database:", error);
         res.status(500).send("Error retrieving data from database");
       } else {
-        cache.set(tableName, results);
+        client.set(tableName, JSON.stringify(results), 'EX', 86400); // Set data in Redis cache with expiration time of 24 hours
         res.send(results);
       }
     });
@@ -65,7 +67,7 @@ const fetchDataByTableName = (tableName) => async (req, res) => {
 };
 
 const insertDataIntoTable = (tableName) => async (req, res) => {
-  cache.del(tableName);
+  client.del(tableName); // Clear cache for the table
   const formData = req.body;
   const sql = `INSERT INTO ${tableName} SET ?`;
 
@@ -86,7 +88,7 @@ const insertDataIntoTable = (tableName) => async (req, res) => {
 };
 
 const deleteDataByColumnName = (tableName, columnName) => async (req, res) => {
-  cache.del(tableName);
+  client.del(tableName); // Clear cache for the table
   const { value } = req.body;
   const sql = `DELETE FROM ${tableName} WHERE ${columnName} = ?`;
 
@@ -107,7 +109,7 @@ const deleteDataByColumnName = (tableName, columnName) => async (req, res) => {
 };
 
 const updateCaseStudyData = (id) => async (req, res) => {
-  cache.del("maincasestudy");
+  client.del("maincasestudy"); // Clear cache for maincasestudy
   const { company, companytitle, companybody, companyindustry } = req.body;
   const sql = `UPDATE maincasestudy SET company = ?, companytitle = ?, companybody = ?, companyindustry = ? WHERE id = ?`;
 
